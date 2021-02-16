@@ -10,6 +10,15 @@ class Api::V1::BaseController < ActionController::API
 
   private
 
+  def current_user
+    return unless session[:user_id]
+    @current_user ||= User.find(session[:user_id])
+  end
+
+  def logged_in?
+    !!session[:user_id]
+  end
+
   def user_not_authorized(exception)
     render json: {
       error: "Unauthorized #{exception.policy.class.to_s.underscore.camelize}.#{exception.query}"
